@@ -1,6 +1,8 @@
 package morsetranslator
 
-import "fmt"
+import (
+	"time"
+)
 
 type Sequence uint8
 
@@ -12,20 +14,25 @@ const (
 	SEPARATOR_WORD           = 5 // Separator between word (_______)
 )
 
-func (s Sequence) String() {
-	switch s {
-	case SHORT:
-		fmt.Print(".")
-	case LONG:
-		fmt.Print("_")
-	case SEPARATOR:
-		fmt.Print("<SEP>")
-	case SEPARATOR_LETTER_IN_WORD:
-		fmt.Print("<SEPLW>")
-	case SEPARATOR_WORD:
-		fmt.Print("<SEPW>")
-	}
+type SequenceSettings struct {
+	Duration           time.Duration
+	TextRepresentation string
 }
+
+//func (s Sequence) String() {
+//	switch s {
+//	case SHORT:
+//		fmt.Print(".")
+//	case LONG:
+//		fmt.Print("_")
+//	case SEPARATOR:
+//		fmt.Print("<SEP>")
+//	case SEPARATOR_LETTER_IN_WORD:
+//		fmt.Print("<SEPLW>")
+//	case SEPARATOR_WORD:
+//		fmt.Print("<SEPW>")
+//	}
+//}
 
 var LETTER = map[rune][]Sequence{
 	'a': []Sequence{SHORT, SEPARATOR, LONG},                                                        // a = ._

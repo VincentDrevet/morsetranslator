@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func EncodeMessageToMorse(input string) ([]Sequence, error) {
+func (t *MorseTranslator) EncodeMessageToMorse(input string) ([]Sequence, error) {
 
 	//Split message by " "
 	split := strings.Split(input, " ")
@@ -38,17 +38,17 @@ func EncodeMessageToMorse(input string) ([]Sequence, error) {
 	return finalSequence, nil
 }
 
-func PrintRawSequences(sequences []Sequence) {
+func (t *MorseTranslator) PrintRawSequences(sequences []Sequence) {
 	for _, s := range sequences {
-		s.String()
+		print(t.SequencesTable[s].TextRepresentation)
 	}
 	fmt.Println()
 }
 
-func PrintPrettySequences(Sequence []Sequence) {
+func (t *MorseTranslator) PrintPrettySequences(Sequence []Sequence) {
 	for _, s := range Sequence {
 		if s == SHORT || s == LONG {
-			s.String()
+			print(t.SequencesTable[s].TextRepresentation)
 		}
 
 		if s == SEPARATOR_WORD {
