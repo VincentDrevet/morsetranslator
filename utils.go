@@ -57,4 +57,4 @@ func PrintPrettySequences(Sequence []Sequence) {
 	}
 }
 
-func DecodeMessageToMorse()
+//func DecodeMessageToMorse()
