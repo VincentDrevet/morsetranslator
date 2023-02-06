@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Encode a text message to a slice of morse sequences
 func (t *MorseTranslator) EncodeMessageToMorse(input string) ([]Sequence, error) {
 
 	//Split message by " "
@@ -38,6 +39,7 @@ func (t *MorseTranslator) EncodeMessageToMorse(input string) ([]Sequence, error)
 	return finalSequence, nil
 }
 
+// Print morse sequence to text representation with separator
 func (t *MorseTranslator) PrintRawSequences(sequences []Sequence) {
 	for _, s := range sequences {
 		print(t.SequencesTable[s].TextRepresentation)
@@ -45,6 +47,7 @@ func (t *MorseTranslator) PrintRawSequences(sequences []Sequence) {
 	fmt.Println()
 }
 
+// Print morse sequence to text representation without separator
 func (t *MorseTranslator) PrintPrettySequences(Sequence []Sequence) {
 	for _, s := range Sequence {
 		if s == SHORT || s == LONG {
