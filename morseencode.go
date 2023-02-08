@@ -3,12 +3,28 @@ package morsetranslator
 import (
 	"errors"
 	"fmt"
+	"os/exec"
 	"strings"
 	"time"
 )
 
+func setStatusPin(pin string, status bool) {
+	switch status {
+	case true:
+		cmd := exec.Command("gpioctl", pin, "1")
+		cmd.Run()
+	default:
+		cmd := exec.Command("gpioctl", pin, "0")
+		cmd.Run()
+	}
+
+}
+
 // Encode a text message to a slice of morse sequences
 func (t *MorseTranslator) EncodeMessageToMorse(input string) ([]Sequence, error) {
+
+	//Convert string to lowercase
+	input = strings.ToLower(input)
 
 	//Split message by " "
 	split := strings.Split(input, " ")
@@ -61,7 +77,7 @@ func (t *MorseTranslator) PrintPrettySequences(Sequence []Sequence) {
 	}
 }
 
-func (t *MorseTranslator) Send(sequences []Sequence, sendfunc func(gpioPin string, state bool), print bool) {
+func (t *MorseTranslator) SendToGPIO(sequences []Sequence, gpioPin string, print bool) {
 
 	var len_seqs = len(sequences) - 1
 	for i, s := range sequences {
@@ -77,10 +93,10 @@ func (t *MorseTranslator) Send(sequences []Sequence, sendfunc func(gpioPin strin
 
 		switch s {
 		case SHORT, LONG:
-			sendfunc("18", true)
+			setStatusPin(gpioPin, true)
 			time.Sleep(t.SequencesTable[s].Duration)
 		case SEPARATOR, SEPARATOR_LETTER_IN_WORD, SEPARATOR_WORD:
-			sendfunc("18", false)
+			setStatusPin(gpioPin, false)
 			time.Sleep(t.SequencesTable[s].Duration)
 		}
 	}
