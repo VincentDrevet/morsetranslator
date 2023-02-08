@@ -50,3 +50,46 @@ func NewMorseTranslator(configuration Configuration) MorseTranslator {
 	}
 
 }
+
+func NewDefaultMorseTranslator() MorseTranslator {
+	configuration := Configuration{
+		ShortDuration:                           100 * time.Millisecond,
+		ShortTextRepresentation:                 ".",
+		LongTextRepresentation:                  "_",
+		SeparatorTextRepresentation:             "<SEP>",
+		SeparatorLetterInWordTextRepresentation: "<SEPLIW>",
+		SeparatorWordTextRepresentation:         "<SEPW>",
+	}
+
+	var sequencesTable = map[Sequence]SequenceSettings{
+		SHORT: SequenceSettings{
+			Duration:           configuration.ShortDuration,
+			TextRepresentation: configuration.ShortTextRepresentation,
+		},
+
+		LONG: SequenceSettings{
+			Duration:           configuration.ShortDuration * 3,
+			TextRepresentation: configuration.LongTextRepresentation,
+		},
+
+		SEPARATOR: SequenceSettings{
+			Duration:           configuration.ShortDuration,
+			TextRepresentation: configuration.SeparatorTextRepresentation,
+		},
+
+		SEPARATOR_LETTER_IN_WORD: SequenceSettings{
+			Duration:           configuration.ShortDuration * 3,
+			TextRepresentation: configuration.SeparatorLetterInWordTextRepresentation,
+		},
+
+		SEPARATOR_WORD: SequenceSettings{
+			Duration:           7 * (configuration.ShortDuration * 3),
+			TextRepresentation: configuration.SeparatorWordTextRepresentation,
+		},
+	}
+
+	return MorseTranslator{
+		Configuration:  configuration,
+		SequencesTable: sequencesTable,
+	}
+}

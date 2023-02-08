@@ -77,7 +77,7 @@ func (t *MorseTranslator) PrintPrettySequences(Sequence []Sequence) {
 	}
 }
 
-func (t *MorseTranslator) SendToGPIO(sequences []Sequence, gpioPin string, print bool) {
+func (t *MorseTranslator) SendToGPIO(sequences []Sequence, gpioPin string, print bool, c chan string) {
 
 	var len_seqs = len(sequences) - 1
 	for i, s := range sequences {
@@ -85,9 +85,11 @@ func (t *MorseTranslator) SendToGPIO(sequences []Sequence, gpioPin string, print
 		if print {
 			if i == len_seqs {
 				fmt.Print("fin")
-				fmt.Printf("%s\n", t.SequencesTable[s].TextRepresentation)
+				//fmt.Printf("%s\n", t.SequencesTable[s].TextRepresentation)
+				c <- t.SequencesTable[s].TextRepresentation
 			} else {
-				fmt.Printf("%s", t.SequencesTable[s].TextRepresentation)
+				//fmt.Printf("%s", t.SequencesTable[s].TextRepresentation)
+				c <- t.SequencesTable[s].TextRepresentation
 			}
 		}
 
