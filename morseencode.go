@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 )
 
 // Encode a text message to a slice of morse sequences
@@ -60,4 +61,27 @@ func (t *MorseTranslator) PrintPrettySequences(Sequence []Sequence) {
 	}
 }
 
-//func DecodeMessageToMorse()
+func (t *MorseTranslator) Send(sequences []Sequence, sendfunc func(gpioPin string, state bool), print bool) {
+
+	var len_seqs = len(sequences) - 1
+	for i, s := range sequences {
+
+		if print {
+			if i == len_seqs {
+				fmt.Print("fin")
+				fmt.Printf("%s\n", t.SequencesTable[s].TextRepresentation)
+			} else {
+				fmt.Printf("%s", t.SequencesTable[s].TextRepresentation)
+			}
+		}
+
+		switch s {
+		case SHORT, LONG:
+			sendfunc("18", true)
+			time.Sleep(t.SequencesTable[s].Duration)
+		case SEPARATOR, SEPARATOR_LETTER_IN_WORD, SEPARATOR_WORD:
+			sendfunc("18", false)
+			time.Sleep(t.SequencesTable[s].Duration)
+		}
+	}
+}
