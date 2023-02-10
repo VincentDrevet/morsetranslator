@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+type PrintFunc func(s string)
+
 func setStatusPin(pin string, status bool) {
 	switch status {
 	case true:
@@ -77,20 +79,19 @@ func (t *MorseTranslator) PrintPrettySequences(Sequence []Sequence) {
 	}
 }
 
-func (t *MorseTranslator) SendToGPIO(sequences []Sequence, gpioPin string, print bool, c chan string) {
+func (t *MorseTranslator) SendToGPIO(sequences []Sequence, gpioPin string, printfunc PrintFunc) {
 
-	var len_seqs = len(sequences) - 1
-	for i, s := range sequences {
+	//var len_seqs = len(sequences) - 1
+	for _, s := range sequences {
 
-		if print {
-			if i == len_seqs {
-				fmt.Print("fin")
-				//fmt.Printf("%s\n", t.SequencesTable[s].TextRepresentation)
-				c <- t.SequencesTable[s].TextRepresentation
+		if printfunc != nil {
+
+			printfunc(t.SequencesTable[s].TextRepresentation)
+			/*if i == len_seqs {
+				fmt.Printf("%s\n", t.SequencesTable[s].TextRepresentation)
 			} else {
 				//fmt.Printf("%s", t.SequencesTable[s].TextRepresentation)
-				c <- t.SequencesTable[s].TextRepresentation
-			}
+			}*/
 		}
 
 		switch s {
