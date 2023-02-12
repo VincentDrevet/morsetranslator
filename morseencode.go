@@ -10,6 +10,13 @@ import (
 
 type PrintFunc func(s string)
 
+type GpioFlag uint8
+
+const (
+	IN  = 1
+	OUT = 2
+)
+
 func setStatusPin(pin string, status bool) {
 	switch status {
 	case true:
@@ -20,6 +27,18 @@ func setStatusPin(pin string, status bool) {
 		cmd.Run()
 	}
 
+}
+
+func setPinFlag(pin string, flag GpioFlag) {
+	switch flag {
+	case IN:
+		cmd := exec.Command("gpioctl", "-c", pin, "IN")
+		cmd.Run()
+
+	case OUT:
+		cmd := exec.Command("gpioctl", "-c", pin, "OUT")
+		cmd.Run()
+	}
 }
 
 // Encode a text message to a slice of morse sequences
@@ -81,6 +100,7 @@ func (t *MorseTranslator) PrintPrettySequences(Sequence []Sequence) {
 
 func (t *MorseTranslator) SendToGPIO(sequences []Sequence, gpioPin string, printfunc PrintFunc) {
 
+	setPinFlag(gpioPin, OUT)
 	//var len_seqs = len(sequences) - 1
 	for _, s := range sequences {
 
@@ -103,4 +123,5 @@ func (t *MorseTranslator) SendToGPIO(sequences []Sequence, gpioPin string, print
 			time.Sleep(t.SequencesTable[s].Duration)
 		}
 	}
+	setStatusPin(gpioPin, false)
 }
